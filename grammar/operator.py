@@ -29,6 +29,6 @@ print(a%b)
 print(a**b)
 
 a=4.3
-b=5
+b=int(input())
 c=a+b
 print(type(c))
