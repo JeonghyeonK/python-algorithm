@@ -28,7 +28,7 @@ for i in range(N):
             if body[3] == 0:
                 body[2] += 1
             else:
-                if lst[i][head-1] == '*':
+                if lst[i][head-1] == '*':  
                     body[3] += 1
                 else:
                     body[4] += 1
