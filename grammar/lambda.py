@@ -16,4 +16,3 @@ print(list(map(plus_one, a)))
 
 # 위와 같은 로직, 익명함수를 통해 간결해짐
 print(list(map(lambda x: x+1, a)))
-
