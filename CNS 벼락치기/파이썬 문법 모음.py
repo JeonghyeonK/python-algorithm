@@ -2,6 +2,9 @@ import heapq
 from sys import maxsize
 import sys
 
+#숫자 여러개 input
+N, K = map(int, input().split())
+
 # input 많이 할 때
 input = sys.stdin.readline
 input = sys.stdin.readline().strip().split #공백 제거하고 띄어쓰기단위로 입력
