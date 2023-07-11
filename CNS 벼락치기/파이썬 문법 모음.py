@@ -112,6 +112,11 @@ import random as r
 a=[]
 a=list()
 
+# 빈 list
+emptyList = [None] * 5
+# list 얕은 복사
+emptyList = a.copy()
+
 a=[1, 2, 3, 4, 5]
 # 맨 뒤에 6 추가
 a.append(6)
