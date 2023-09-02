@@ -1,0 +1,63 @@
+import sys
+input = sys.stdin.readline
+
+N = input().strip()
+linked_list = list()
+linked_list.append(['head', -1, 1])
+for i in range(len(N)-1):
+    linked_list.append([N[i], i, i+2])
+linked_list.append([N[-1], len(N)-1, -1])
+
+#print(linked_list)
+        
+M = int(input())
+cursor = len(linked_list) - 1
+for _ in range(M):
+    command = list(map(str, input().strip().split()))
+    
+    if command[0] == 'L':
+        if linked_list[cursor][1] != -1:
+            cursor = linked_list[cursor][1]
+        #print(cursor, linked_list)
+    
+    elif command[0] == 'D':
+        if linked_list[cursor][2] != -1:
+            cursor = linked_list[cursor][2]
+        #print(cursor, linked_list)
+    
+    elif command[0] == 'B':
+        if linked_list[cursor][1] != -1:  
+            if linked_list[cursor][2] > 0:  
+                linked_list[linked_list[cursor][1]][2] = linked_list[cursor][2]
+                linked_list[linked_list[cursor][2]][1] = linked_list[cursor][1]
+                cursor = linked_list[cursor][1]
+                #커서 인덱스 원소의 왼쪽 원소는 오른쪽을, 오른쪽 원소는 왼쪽 원소 가리키게 하고 자멸
+            
+            else:
+                linked_list[linked_list[cursor][1]][2] = -1
+                cursor = linked_list[cursor][1]
+                
+                
+        #print(cursor, linked_list)
+    
+    elif command[0] == 'P' and len(command) == 2:        
+        new_left_idx = cursor
+        new_right_idx = linked_list[cursor][2]
+        linked_list.append([command[1], new_left_idx, new_right_idx])
+        cursor = len(linked_list)-1 
+        
+        if linked_list[cursor][1] != -1:
+            linked_list[linked_list[cursor][1]][2] = cursor
+        if linked_list[cursor][2] != -1:
+            linked_list[linked_list[cursor][2]][1] = cursor
+        #print(cursor, linked_list)
+
+    j = linked_list[0][2]
+while(j >= 0):
+    print(linked_list[j][0], end='')
+    j = linked_list[j][2]
+# print("")
+# print("cursor : ", cursor)
+# print("")
+    
+    
