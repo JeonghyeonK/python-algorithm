@@ -114,6 +114,8 @@ a=list()
 
 # 빈 list
 emptyList = [None] * 5
+emptyList = [[] for _ in range(5)]
+
 # list 얕은 복사
 emptyList = a.copy()
 
