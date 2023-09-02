@@ -18,4 +18,3 @@ for order in orders:
             print(heapq.heappop(hq))
     else:
         heapq.heappush(hq, order)
-    
