@@ -14,7 +14,7 @@ for i in range(N-1):
 
 answer = heapq.heappop(n_num) - 1000000000
 print(answer)
-
+    
 
 
 '''
