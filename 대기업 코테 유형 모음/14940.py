@@ -51,14 +51,3 @@ for lst in distance_map:
         print(distance, end=' ')
     print()
 
-
-
-'''
-target부터 시작
-deque에서 포인트 한 개 꺼내서
-포인트 주변 8개 점 탐색
-지도를 나가거나, 포인트가 0이면 제외하고
-1인 지점은 deque에 추가
-
-deque 길이 0이면 종료
-'''
