@@ -52,6 +52,7 @@ print("values", list(fruit.values()))
 print("items", list(fruit.items()))
 if 'capital' not in fruit:
     fruit['capital'] = "seoul"
+fruit.pop('capital')
 print("new items", list(fruit.items()))
 
 
