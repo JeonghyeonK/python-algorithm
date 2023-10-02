@@ -85,7 +85,9 @@ msg="It is Time"
 tmp=msg.upper()
 print(tmp.find('T'))
 print(tmp.count('T'))
-print(msg[3:5])    
+print(msg[3:5]) 
+# 문자열 거꾸로 출력   
+print(msg[::-1])
 # 소문자 알파벳만 출력
 for x in msg:
     if x.islower():
