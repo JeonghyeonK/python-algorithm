@@ -53,125 +53,184 @@ for _ in range(N):
 
 #print(grid)
 
+for k in range(K):
 
-#공격자 선정
-min_row = -1
-min_col = -1
-for i in range(N+M-2, -1, -1):
-    for col in range(M-1, -1, -1):
-        row = i - col
+    #공격자 선정
+    min_row = -1
+    min_col = -1
+    for i in range(N+M-2, -1, -1):
+        for col in range(M-1, -1, -1):
+            row = i - col
 
-        if row >= N:
-            break
-        elif row < 0:
-            continue
-        if grid[row][col][0] <= 0:
-            continue
-        if min_row == -1:
-            min_row = row
-            min_col = col
-            continue
-        #print(row, col)
-
-        if grid[row][col][0] < grid[min_row][min_col][0]:
-            min_row = row
-            min_col = col
-        elif grid[row][col][0] == grid[min_row][min_col][0]:
-            if grid[row][col][1] > grid[min_row][min_col][1]:
+            if row >= N:
+                break
+            elif row < 0:
+                continue
+            if grid[row][col][0] <= 0:
+                continue
+            if min_row == -1:
                 min_row = row
                 min_col = col
-        #print(min_row, min_col)
-grid[min_row][min_col][0] += N+M
-#print(grid[min_row][min_col])
-#print("여기까지 가해자")
-            
-#피해자 선정
-max_row = -1
-max_col = -1
-for i in range(0, N+M-1):
-    for col in range(0, M):
-        row = i - col
-        if row >= N:
-            continue
-        elif row < 0:
-            break
-        if grid[row][col][0] <= 0:
-            continue
-        if row == min_row and col == min_col:
-            continue
-        if max_row == -1:
-            max_row = row
-            max_col = col
-            continue
-        #print(row, col)
+                continue
+            #print(row, col)
 
-        if grid[row][col][0] > grid[max_row][max_col][0]:
-            max_row = row
-            max_col = col
-        elif grid[row][col][0] == grid[max_row][max_col][0]:
-            if grid[row][col][1] < grid[max_row][max_col][1]:
+            if grid[row][col][0] < grid[min_row][min_col][0]:
+                min_row = row
+                min_col = col
+            elif grid[row][col][0] == grid[min_row][min_col][0]:
+                if grid[row][col][1] > grid[min_row][min_col][1]:
+                    min_row = row
+                    min_col = col
+            #print(min_row, min_col)
+    grid[min_row][min_col][0] += N + M
+    grid[min_row][min_col][1] = k + 1
+    #print(grid[min_row][min_col])
+    #print("여기까지 가해자")
+                
+    #피해자 선정
+    max_row = -1
+    max_col = -1
+    for i in range(0, N+M-1):
+        for col in range(0, M):
+            row = i - col
+            if row >= N:
+                continue
+            elif row < 0:
+                break
+            if grid[row][col][0] <= 0:
+                continue
+            if row == min_row and col == min_col:
+                continue
+            if max_row == -1:
                 max_row = row
                 max_col = col
-        #print(max_row, max_col)
-#print("여기까지 피해자")
+                continue
+            #print(row, col)
 
-#최단경로 조사
-visited = deque()
-visited.append([[min_row, min_col]])
-while(len(visited) > 0):
-    #print("visited: ", visited)
-    route = visited.popleft()
-    point = route[-1]
-    is_end = False
-    #print("point: ",point)
-    next_points = [
-        [point[0], (point[1]+1)%M],
-        [(point[0]+1)%N, point[1]],
-        [point[0], (point[1]-1+M)%M],
-        [(point[0]-1+N)%N, point[1]]
-    ]
-    for next_ in next_points:
-        if grid[next_[0]][next_[1]][0] == 0:
-            #print("zero: ", next_)
-            continue
+            if grid[row][col][0] > grid[max_row][max_col][0]:
+                max_row = row
+                max_col = col
+            elif grid[row][col][0] == grid[max_row][max_col][0]:
+                if grid[row][col][1] < grid[max_row][max_col][1]:
+                    max_row = row
+                    max_col = col
+            #print(max_row, max_col)
+    #print("여기까지 피해자")
 
-        is_visited = False
-        for lst in visited:
-            if next_ in lst:
-                is_visited = True
-                break
-        if is_visited:
-            #print("is visited: ", next_)
-            continue
-        
-        new_route = route.copy()
-        new_route.append(next_)
-        visited.append(new_route)
-        #print("new_route: ", new_route)
-        if next_[0] == max_row and next_[1] == max_col:
-            #print("end: ", next_)
-            is_end = True
-            break
-    
-    if is_end:
-        break
+    #최단경로 조사
+    visited = deque()
+    visited.append([[min_row, min_col]])
+    while(len(visited) > 0):
+        #print("visited: ", visited)
+        route = visited.popleft()
+        point = route[-1]
+        is_end = False
+        #print("point: ",point)
+        next_points = [
+            [point[0], (point[1]+1)%M],
+            [(point[0]+1)%N, point[1]],
+            [point[0], (point[1]-1+M)%M],
+            [(point[0]-1+N)%N, point[1]]
+        ]
+        for next_ in next_points:
+            if grid[next_[0]][next_[1]][0] == 0:
+                #print("zero: ", next_)
+                continue
 
-#레이저 공격
-if len(visited) > 0:
-    power = grid[min_row][min_col][0]
-    for i in range(1, len(visited)-1):
-        point = visited[i]
-        grid[point[0]][point[1]][0] -= int(power/2)
-    grid[max_row][max_col][0] -= power
-
-#포탄 공격
-else:
-    for i in range(-1, 2):
-        for j in range(-1, 2):
-            if i == 0 and j == 0:
+            is_visited = False
+            for lst in visited:
+                if next_ in lst:
+                    is_visited = True
+                    break
+            if is_visited:
+                #print("is visited: ", next_)
                 continue
             
+            new_route = route.copy()
+            new_route.append(next_)
+            visited.append(new_route)
+            #print("new_route: ", new_route)
+            if next_[0] == max_row and next_[1] == max_col:
+                #print("end: ", next_)
+                is_end = True
+                break
+        
+        if is_end:
+            break
+
+
+
+    #레이저 공격
+    power = grid[min_row][min_col][0]
+    if len(visited) > 0:
+        # print(k, "th", "before attack")
+        # for g in grid:
+        #     for h in g:
+        #         print(h[0], end=' ')
+        #     print()
+        # print("route: ", visited[-1])
+        # print()
+        for i in range(N):
+            for j in range(M):
+                if grid[i][j][0] <= 0:
+                    continue
+                if [i, j] in visited[-1]:
+                    if i == min_row and j == min_col:
+                        continue
+                    elif i == max_row and j == max_col:
+                        grid[i][j][0] -= power
+                    else:
+                        grid[i][j][0] -= int(power/2)
+                else:
+                    grid[i][j][0] += 1
+
+    #포탄 공격
+    else:
+        row_range = list()
+        col_range = list()
+        for i in range(-1, 2):
+            row_range.append((max_row + i + N) % N)
+            col_range.append((max_col + i + M) % M)
+        for i in range(N):
+            for j in range(M):
+                if grid[i][j][0] <= 0:
+                    continue
+                if i == min_row and j == min_col:
+                    continue
+                
+
+                if i in row_range and j in col_range:
+                    if i == max_row and j == max_col:
+                        grid[i][j][0] -= power
+                    else:
+                        grid[i][j][0] -= int(power/2)
+
+                else:
+                    grid[i][j][0] += 1
     
+    # print(k, "th", "last")
+    # for g in grid:
+    #     for h in g:
+    #         print(h[0], end=' ')
+    #     print()
+    # print()
+
+    alive_cnt = 0
+    for i in range(N):
+        for j in range(M):
+            if grid[i][j][0] > 0:
+                alive_cnt += 1
+        if alive_cnt >= 2:
+            break
+    if alive_cnt <= 1:
+        break
+
+max_power = 0
+for i in range(N):
+    for j in range(M):
+        if grid[i][j][0] > max_power:
+            max_power = grid[i][j][0]
+print(max_power)
 
 
     #레이저 공격
