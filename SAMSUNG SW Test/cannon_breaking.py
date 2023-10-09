@@ -51,7 +51,7 @@ for _ in range(N):
         col[i] = [col[i], 0]
     grid.append(col)
 
-print(grid)
+#print(grid)
 
 
 #공격자 선정
@@ -71,7 +71,7 @@ for i in range(N+M-2, -1, -1):
             min_row = row
             min_col = col
             continue
-        print(row, col)
+        #print(row, col)
 
         if grid[row][col][0] < grid[min_row][min_col][0]:
             min_row = row
@@ -80,16 +80,14 @@ for i in range(N+M-2, -1, -1):
             if grid[row][col][1] > grid[min_row][min_col][1]:
                 min_row = row
                 min_col = col
-        print(min_row, min_col)
+        #print(min_row, min_col)
 grid[min_row][min_col][0] += N+M
-print(grid[min_row][min_col])
-
-print("여기까지 가해자")
+#print(grid[min_row][min_col])
+#print("여기까지 가해자")
             
 #피해자 선정
 max_row = -1
 max_col = -1
-
 for i in range(0, N+M-1):
     for col in range(0, M):
         row = i - col
@@ -105,7 +103,7 @@ for i in range(0, N+M-1):
             max_row = row
             max_col = col
             continue
-        print(row, col)
+        #print(row, col)
 
         if grid[row][col][0] > grid[max_row][max_col][0]:
             max_row = row
@@ -114,27 +112,66 @@ for i in range(0, N+M-1):
             if grid[row][col][1] < grid[max_row][max_col][1]:
                 max_row = row
                 max_col = col
-        print(max_row, max_col)
+        #print(max_row, max_col)
+#print("여기까지 피해자")
 
-print("여기까지 피해자")
-
-bfs = deque()
-visited = set()
-bfs.append([[min_row, min_col]])
-while(len(bfs) > 0):
-    point = bfs.popleft()
-    print(point)
+#최단경로 조사
+visited = deque()
+visited.append([[min_row, min_col]])
+while(len(visited) > 0):
+    #print("visited: ", visited)
+    route = visited.popleft()
+    point = route[-1]
+    is_end = False
+    #print("point: ",point)
     next_points = [
-        [point[0][0], point[0][1]+1],
-        [point[0][0]+1, point[0][1]],
-        [point[0][0], point[0][1]-1],
-        [point[0][0]-1, point[0][1]]
+        [point[0], (point[1]+1)%M],
+        [(point[0]+1)%N, point[1]],
+        [point[0], (point[1]-1+M)%M],
+        [(point[0]-1+N)%N, point[1]]
     ]
     for next_ in next_points:
-        if grid[next_[0]][next_[1]][0] > 0:
-            bfs.append(point.append(next_))
-    print(bfs)
-    break
+        if grid[next_[0]][next_[1]][0] == 0:
+            #print("zero: ", next_)
+            continue
+
+        is_visited = False
+        for lst in visited:
+            if next_ in lst:
+                is_visited = True
+                break
+        if is_visited:
+            #print("is visited: ", next_)
+            continue
+        
+        new_route = route.copy()
+        new_route.append(next_)
+        visited.append(new_route)
+        #print("new_route: ", new_route)
+        if next_[0] == max_row and next_[1] == max_col:
+            #print("end: ", next_)
+            is_end = True
+            break
+    
+    if is_end:
+        break
+
+#레이저 공격
+if len(visited) > 0:
+    power = grid[min_row][min_col][0]
+    for i in range(1, len(visited)-1):
+        point = visited[i]
+        grid[point[0]][point[1]][0] -= int(power/2)
+    grid[max_row][max_col][0] -= power
+
+#포탄 공격
+else:
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if i == 0 and j == 0:
+                continue
+            
+    
 
 
     #레이저 공격
@@ -143,3 +180,15 @@ while(len(bfs) > 0):
         #최단경로 정해졌으면 공격대상이 공격자의 공격력만큼 수치 피해입음
         #최단경로 위에 있는 포탑도 공격력/2의 몫만큼 공격받음
         #최단경로를 못찾으면 포탄공격
+
+        #최단경로 찾기
+            #dq에다가 [row, col] 형식으로 추가
+            #dq에서 하나 pop해서 우하좌상으로 하나씩 검사
+                #해당 블럭이 0인지
+                #해당 블럭까지 도달한 경우가 visited에 있었는지(있었다면 최단이 아님)
+            #검사를 통과했다면 dq에 append하기
+            #이 과정을 거쳐 목표 포탑이 나오면 끝남. 안나오면 레이저공격 말고 다른공격으로 가야함
+            #이때 어떤 경로를 거쳐서 갔는지를 어떻게 저장하지..
+            #visited에다가 [[1,1], [1,2], [2,2]] 일케 넣어놓으면 확인 가능하긴 함
+            #대신 방문여부 검사시 in vitited 안되고 for _ in visited -> in _ 일케만 가능함
+
