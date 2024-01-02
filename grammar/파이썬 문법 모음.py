@@ -5,7 +5,7 @@ import heapq
 from sys import maxsize
 import sys
 
-#숫자 여러개 input
+#숫자 여러개 input3
 N, K = map(int, input().split())
 
 # input 많이 할 때
